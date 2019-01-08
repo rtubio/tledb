@@ -1,0 +1,3 @@
+mysql-server
+rabbitmq-server
+supervisor
