@@ -1,0 +1,4 @@
+1) import TLE library from SatNet
+2) fetch all files from NORAD
+3) create database entries fro all TLE files
+4) add REST interface to retrieve TLE information

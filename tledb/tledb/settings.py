@@ -25,10 +25,7 @@ with open('../.secrets/django.json') as file:
     django_secrets = json.load(file)
 SECRET_KEY = django_secrets['secret_key']
 
-# ### CELERY configuration
-CELERY_BROKER_URL = 'amqp://localhost'
 # SECURITY WARNING: don't run with debug turned on in production!
-
 DEBUG = True
 
 ALLOWED_HOSTS = []
@@ -43,7 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'django_celery_beat',
+    'django_celery_beat',
+    'django_celery_results',
+    # ### custom apps
+    'fetcher'
 ]
 
 MIDDLEWARE = [
@@ -89,10 +89,13 @@ DATABASES = {
         'USER': db_secrets['user'],
         'PASSWORD': db_secrets['pass'],
         'HOST': db_secrets['host'],
-        'PORT': db_secrets['port']
+        'PORT': db_secrets['port'],
+        'TEST': {
+            'CHARSET': 'utf8',
+            'COLLATION': 'utf8_general_ci',
+        }
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -112,22 +115,20 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# ### CELERY configuration
+CELERY_BROKER_URL = 'amqp://localhost'
+CELERY_RESULT_BACKEND = 'django-db'
