@@ -19,14 +19,86 @@ __author__ = 'rtpardavila@gmail.com'
 import logging
 import sys
 from urllib.request import urlopen as urllib2_urlopen
+
 from django.core import exceptions, validators
 from django.db import models
 
-from common import misc
+from common import misc, parse
 from fetcher.models.celestrak import CelestrakDatabase as Celestrak
 
 
 logger = logging.getLogger('configuration')
+
+
+MAX_TLE_ID_LEN = 24
+MAX_TLE_LINE_LEN = 69
+
+
+class TLEChecker(object):
+    """
+    Class that models a single TLE object, stripping its 3 line contents into
+    several fields.
+    """
+
+    def check(self):
+        """
+        This method checks that the fields of the TLE object are coherent.
+        """
+        assert self.l1_satellite_number == self.l2_satellite_number
+        assert len(self.l0) <= MAX_TLE_ID_LEN
+        assert len(self.l1) <= MAX_TLE_LINE_LEN
+        assert len(self.l2) <= MAX_TLE_LINE_LEN
+
+    def readFields(self):
+        """
+        This method reads the fields for the TLE object from within the TLE
+        string lines.
+        """
+
+        self.l0_satellite_name = self.l0
+        self.l1_satellite_number_w_classification = self.l1[2:7].strip()
+        self.l1_satellite_number = int(self.l1[2:6].strip())
+        self.l1_satellite_classification = self.l1[7:8].strip()
+        self.l1_international_designator_launch_yr = int(self.l1[9:11].strip())
+        self.l1_international_designator_launch_no = int(self.l1[11:14].strip())
+        self.l1_international_designator_launch_piece = self.l1[14:17].strip()
+        self.l1_epoch_year = int(self.l1[18:20].strip())
+        self.l1_epoch_day_fraction = float(self.l1[20:32].strip())
+        self.l1_1st_d_mean_motion = float(self.l1[33:43].strip())
+
+        self.l1_2nd_d_mean_motion = parse.tle_scientific_2_float(
+            self.l1[44:52]
+        )
+
+        self.l1_bstar = parse.tle_scientific_2_float(self.l1[53:61].strip())
+        self.l1_set_no = int(self.l1[64:68].strip())
+        self.l1_checksum = int(self.l1[68:69].strip())
+
+        self.l2_satellite_number = int(self.l2[2:8].strip())
+        self.l2_inclination_deg = float(self.l2[8:16].strip())
+        self.l2_raan_deg = float(self.l2[17:25].strip())
+        self.l2_eccentricity = float(self.l2[26:33].strip())
+        self.l2_arg_perigee_deg = float(self.l2[34:42].strip())
+        self.l2_mean_anomaly_deg = float(self.l2[43:51].strip())
+        self.l2_mean_motion_revs = float(self.l2[52:63].strip())
+        self.l2_revolution_no = int(self.l2[63:68].strip())
+        self.l2_checksum = int(self.l2[68].strip())
+
+    def __init__(self, l0, l1, l2):
+        """Main Constructor
+        Builds the TLE object using the given parameters.
+        """
+        self.l0 = l0
+        self.l1 = l1
+        self.l2 = l2
+
+        self.readFields()
+        self.check()
+
+    def __str__(self):
+        """stringifier"""
+        return self.l0_satellite_name + '\n' +\
+                self.l1_satellite_number_w_classification
 
 
 class TLEManager(models.Manager):
@@ -70,7 +142,8 @@ class TLEManager(models.Manager):
         try:
             tle = self.get(identifier=l0)
             return tle.dirtyUpdate(source=source, identifier=l0, l1=l1, l2=l2)
-        except exceptions.ObjectDoesNotExist:
+        except:
+            logger.info('l1[%d] = %s', len(l1), l1)
             return self.create(source, l0, l1, l2)
 
     @staticmethod
@@ -111,7 +184,11 @@ class TLEManager(models.Manager):
         :return: True if the operation could succesuffly be completed
         """
         l0, l1, l2 = TLEManager.normalize_string(l0, l1, l2)
-        ephem.readtle(l0, l1, l2)
+        try:
+            TLEChecker(l0, l1, l2)
+        except AssertionError as err:
+            logger.warn('Error parsing (%s, %s, %s), ex = %s', l0, l1, l2, err)
+
         return True
 
     @staticmethod
@@ -121,15 +198,13 @@ class TLEManager(models.Manager):
         """
         for s_tuple in Celestrak.CELESTRAK_SECTIONS:
 
-            sys.stdout.write('*')
-            sys.stdout.flush()
-            # noinspection PyUnusedLocal
+            logger.info('*')
+
             section = s_tuple[0]
             tle_info = s_tuple[1]
 
             for (url, description) in tle_info:
-                sys.stdout.write('.')
-                sys.stdout.flush()
+                logger.info('.')
                 TLEManager.load_tles(source=url)
 
     @staticmethod
@@ -177,11 +252,8 @@ class TLE(models.Model):
     Class that models the TLE elements within the database.
     """
     class Meta:
-        app_label = 'configuration'
+        app_label = 'fetcher'
         ordering = ['identifier']
-
-    MAX_TLE_ID_LEN = 24
-    MAX_TLE_LINE_LEN = 69
 
     objects = TLEManager()
 
