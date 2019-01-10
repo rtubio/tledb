@@ -27,78 +27,31 @@ from common import misc, parse
 from fetcher.models.celestrak import CelestrakDatabase as Celestrak
 
 
-logger = logging.getLogger('configuration')
+logger = logging.getLogger(__name__)
 
 
 MAX_TLE_ID_LEN = 24
 MAX_TLE_LINE_LEN = 69
+REGEX_TLE_LINE = '^[a-zA-Z0-9.\s-]{' + str(MAX_TLE_LINE_LEN) + '}$'
 
 
-class TLEChecker(object):
+class UpdatedException(Exception):
+    """Exception
+    Notifies that an object is updated and not created in the database.
     """
-    Class that models a single TLE object, stripping its 3 line contents into
-    several fields.
+    def __init__(self, tleid, reason):
+        super().__init__()
+        self.tleid = tleid
+        self.reason = reason
+
+
+class CreatedException(Exception):
+    """Exception
+    Notifies that an object is created in the database.
     """
-
-    def check(self):
-        """
-        This method checks that the fields of the TLE object are coherent.
-        """
-        assert self.l1_satellite_number == self.l2_satellite_number
-        assert len(self.l0) <= MAX_TLE_ID_LEN
-        assert len(self.l1) <= MAX_TLE_LINE_LEN
-        assert len(self.l2) <= MAX_TLE_LINE_LEN
-
-    def readFields(self):
-        """
-        This method reads the fields for the TLE object from within the TLE
-        string lines.
-        """
-
-        self.l0_satellite_name = self.l0
-        self.l1_satellite_number_w_classification = self.l1[2:7].strip()
-        self.l1_satellite_number = int(self.l1[2:6].strip())
-        self.l1_satellite_classification = self.l1[7:8].strip()
-        self.l1_international_designator_launch_yr = int(self.l1[9:11].strip())
-        self.l1_international_designator_launch_no = int(self.l1[11:14].strip())
-        self.l1_international_designator_launch_piece = self.l1[14:17].strip()
-        self.l1_epoch_year = int(self.l1[18:20].strip())
-        self.l1_epoch_day_fraction = float(self.l1[20:32].strip())
-        self.l1_1st_d_mean_motion = float(self.l1[33:43].strip())
-
-        self.l1_2nd_d_mean_motion = parse.tle_scientific_2_float(
-            self.l1[44:52]
-        )
-
-        self.l1_bstar = parse.tle_scientific_2_float(self.l1[53:61].strip())
-        self.l1_set_no = int(self.l1[64:68].strip())
-        self.l1_checksum = int(self.l1[68:69].strip())
-
-        self.l2_satellite_number = int(self.l2[2:8].strip())
-        self.l2_inclination_deg = float(self.l2[8:16].strip())
-        self.l2_raan_deg = float(self.l2[17:25].strip())
-        self.l2_eccentricity = float(self.l2[26:33].strip())
-        self.l2_arg_perigee_deg = float(self.l2[34:42].strip())
-        self.l2_mean_anomaly_deg = float(self.l2[43:51].strip())
-        self.l2_mean_motion_revs = float(self.l2[52:63].strip())
-        self.l2_revolution_no = int(self.l2[63:68].strip())
-        self.l2_checksum = int(self.l2[68].strip())
-
-    def __init__(self, l0, l1, l2):
-        """Main Constructor
-        Builds the TLE object using the given parameters.
-        """
-        self.l0 = l0
-        self.l1 = l1
-        self.l2 = l2
-
-        self.readFields()
-        self.check()
-
-    def __str__(self):
-        """stringifier"""
-        return self.l0_satellite_name + '\n' +\
-                self.l1_satellite_number_w_classification
+    def __init__(self, tleid):
+        super().__init__()
+        self.tleid = tleid
 
 
 class TLEManager(models.Manager):
@@ -117,14 +70,12 @@ class TLEManager(models.Manager):
         :param l1: Line #1 of the TLE
         :param l2: Line #2 of the TLE
         """
-        TLEManager.check_tle_format(l0, l1, l2)
-
         return super(TLEManager, self).create(
             timestamp=misc.get_utc_timestamp(),
             source=source,
             identifier=l0,
             first_line=l1,
-            second_line=l2,
+            second_line=l2
         )
 
     def create_or_update(self, source, l0, l1, l2):
@@ -137,14 +88,16 @@ class TLEManager(models.Manager):
         :param l0: Line #0 of the TLE (identifier)
         :param l1: Line #1 of the TLE
         :param l2: Line #2 of the TLE
-        :return: a reference to the newly created object in the databse.
         """
+
+        l0, l1, l2 = TLEManager.normalize_string(l0, l1, l2)
+
         try:
             tle = self.get(identifier=l0)
-            return tle.dirtyUpdate(source=source, identifier=l0, l1=l1, l2=l2)
-        except:
-            logger.info('l1[%d] = %s', len(l1), l1)
-            return self.create(source, l0, l1, l2)
+            tle.dirtyUpdate(source=source, identifier=l0, l1=l1, l2=l2)
+        except TLE.DoesNotExist as ex:
+            logger.info('TLE (%s) does not exist, creating new entry...', l0)
+            self.create(source, l0, l1, l2)
 
     @staticmethod
     def normalize_string(l0, l1, l2):
@@ -155,57 +108,41 @@ class TLEManager(models.Manager):
         :param l1: Line#1 of the TLE file
         :param l2: Line#2 of the TLE file
         :return: Tuple (l0, l1, l2)
-
-        OLD encoding change from str to 'ascii', Python 2.7
-        if isinstance(l0, str):
-            l0 = unicodedata.normalize('NFKD', l0).encode('ascii', 'ignore')
-        if isinstance(l1, str):
-            l1 = unicodedata.normalize('NFKD', l1).encode('ascii', 'ignore')
-        if isinstance(l2, str):
-            l2 = unicodedata.normalize('NFKD', l2).encode('ascii', 'ignore')
         """
 
         if isinstance(l0, bytes):
-            l0 = str(l0, 'ascii')
+            l0 = l0.decode('utf-8')
         if isinstance(l1, bytes):
-            l1 = str(l1, 'ascii')
+            l1 = l1.decode('utf-8')
         if isinstance(l2, bytes):
-            l2 = str(l2, 'ascii')
+            l2 = l2.decode('utf-8')
 
         return l0, l1, l2
-
-    @staticmethod
-    def check_tle_format(l0, l1, l2):
-        """Static method
-        Checks whether the format for a given TLE is correct or not.
-        :param l0: Line#0 of the TLE file
-        :param l1: Line#1 of the TLE file
-        :param l2: Line#2 of the TLE file
-        :return: True if the operation could succesuffly be completed
-        """
-        l0, l1, l2 = TLEManager.normalize_string(l0, l1, l2)
-        try:
-            TLEChecker(l0, l1, l2)
-        except AssertionError as err:
-            logger.warn('Error parsing (%s, %s, %s), ex = %s', l0, l1, l2, err)
-
-        return True
 
     @staticmethod
     def load_celestrak():
         """
         Loads the TLE from all the accessible resources from celestrak.com
         """
-        for s_tuple in Celestrak.CELESTRAK_SECTIONS:
+        read = 0
+        loaded = 0
+        updated = 0
+        erroneous = 0
 
-            logger.info('*')
+        for s_tuple in Celestrak.CELESTRAK_SECTIONS:
 
             section = s_tuple[0]
             tle_info = s_tuple[1]
 
             for (url, description) in tle_info:
-                logger.info('.')
-                TLEManager.load_tles(source=url)
+                r, l, u, e = TLEManager.load_tles(source=url)
+
+                read += r
+                loaded += l
+                updated += u
+                erroneous += e
+
+        return read, loaded, updated, erroneous
 
     @staticmethod
     def load_tles(source=Celestrak.CELESTRAK_CUBESATS, testing=False):
@@ -215,7 +152,13 @@ class TLEManager(models.Manager):
 
         :param source: URL to the file with the TLE's
         :param testing: Flag that indicates an internal testing state
+        :returns: tuple with the number of TLE objects loaded and erroneous
         """
+        read = 0
+        loaded = 0
+        updated = 0
+        erroneous = 0
+
         l_n = 0
         l0, l1, l2 = '', '', ''
 
@@ -236,15 +179,21 @@ class TLEManager(models.Manager):
                 l_n += 1
 
             try:
+                read += 1
                 TLE.objects.create_or_update(
                     source=source, l0=l0, l1=l1, l2=l2
                 )
+            except CreatedException as ex:
+                logger.info('TLE %s has been created', ex.tleid)
+                loaded += 1
+            except UpdatedException as ex:
+                logger.info('TLE %s updated, reason = %s', ex.tleid, ex.reason)
+                updated += 1
             except ValueError as ex:
-                if testing:
-                    logger.warn('Error reading TLE = ' + str(l0))
-                    continue
-                else:
-                    raise ex
+                logger.warn('Error reading TLE = ' + str(l0))
+                erroneous += 1
+
+        return read, loaded, updated, erroneous
 
 
 class TLE(models.Model):
@@ -259,7 +208,7 @@ class TLE(models.Model):
 
     identifier = models.CharField(
         'Identifier of the spacecraft that this TLE element models (line 0)',
-        max_length=24,
+        max_length=MAX_TLE_ID_LEN,
         unique=True
     )
 
@@ -278,7 +227,7 @@ class TLE(models.Model):
         max_length=MAX_TLE_LINE_LEN,
         validators=[
             validators.RegexValidator(
-                regex='^[a-zA-Z0-9.\s-]{69}$',
+                regex=REGEX_TLE_LINE,
                 message="Alphanumeric or '.-_' required",
                 code='invalid_tle_line_1'
             )
@@ -289,7 +238,7 @@ class TLE(models.Model):
         max_length=MAX_TLE_LINE_LEN,
         validators=[
             validators.RegexValidator(
-                regex='^[a-zA-Z0-9.\s-]{69}$',
+                regex=REGEX_TLE_LINE,
                 message="Alphanumeric or '.-_' required",
                 code='invalid_tle_line_2'
             )
@@ -305,26 +254,29 @@ class TLE(models.Model):
         :param l1: The first line of the TLE (line#1).
         :param l2: The second line of the TLE (line#2).
         """
-        changed_flag = False
+        changed = False
+        reason = None
 
         if self.identifier != identifier:
+            reason = 'identifier ({}, {})'.format(self.identifier, identifier)
             self.identifier = identifier
-            changed_flag = True
+            changed = True
 
         if self.first_line != l1:
+            reason = 'l1: ({}, {})'.format(self.first_line, l1)
             self.first_line = l1
-            changed_flag = True
+            changed = True
 
         if self.second_line != l2:
+            reason = 'l2: ({}, {})'.format(self.second_line, l2)
             self.second_line = l2
-            changed_flag = True
+            changed = True
 
         if self.source != source:
+            logger.debug('Multiple appearance for %s', identifier)
             self.source = source
-            changed_flag = True
 
-        if changed_flag:
+        if changed:
             self.timestamp = misc.get_utc_timestamp()
             self.save()
-
-        return self
+            raise UpdatedException(self.identifier, reason)
