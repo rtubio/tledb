@@ -17,4 +17,5 @@ router.register(r'tle', views.TLEViewSet)
 # Wire up our API using automatic URL routing.
 urlpatterns = [
     url(r'^', include(router.urls)),
+    url(r'^admin/', admin.site.urls)
 ]

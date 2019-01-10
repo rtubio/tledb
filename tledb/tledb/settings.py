@@ -1,13 +1,16 @@
-"""
-Django settings for tledb project.
-"""
 
 import json
 import os
 import sys
 
+"""
+Django settings for the tledb project.
+"""
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# STATIC_ROOT = os.path.join(BASE_DIR, '.static/')
+
 
 # SECURITY WARNING: keep the secret key used in production secret!
 with open('../.secrets/django.json') as file:
@@ -17,13 +20,14 @@ SECRET_KEY = django_secrets['secret_key']
 ALLOWED_HOSTS = []
 DEBUG = True
 
-# SECURITY WARNING: don't run with debug turned on in production!
-"""
+""" TODO Find what is the problem with this code... static files not served
 if sys.argv[1] == 'manage.py':
+    print('DEBUG activated for testing')
     ALLOWED_HOSTS = []
     DEBUG = True
 else:
-    ALLOWED_HOSTS = ['0.0.0.0']
+    print('DEBUG deactivated for production')
+    ALLOWED_HOSTS = ['0.0.0.0', 'localhost']
     DEBUG = False
 """
 
