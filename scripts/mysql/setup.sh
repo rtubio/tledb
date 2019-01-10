@@ -17,7 +17,6 @@ set global sql_mode='STRICT_TRANS_TABLES';
   "
 
   echo "$filestr" > "$1"
-
 }
 
 
@@ -37,14 +36,13 @@ create_django_config () {
   "
 
   echo "$filestr" > "$1"
-
 }
 
 
 source "config/scripts.config"
 source "config/sql.config"
 
-echo -n 'Please input password for the new MySQL user:'
+echo -n 'Please input password for the new MySQL database user:'
 read -s password
 echo
 echo -n 'Please input your password again:'
