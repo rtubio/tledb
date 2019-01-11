@@ -1,9 +1,32 @@
 #!/bin/bash
 
-nginx_conf () {
+
+nginx_http () {
   filestr=$"
-    sendfile        on;
-    keepalive_timeout  65;
+server {
+    listen 80;
+    server_name $NGINX_SERVERNAME;
+
+    access_log $NGINX_ACCESS_LOG;
+    error_log $NGINX_ERROR_LOG;
+
+    location /static {
+        root $NGINX_STATIC;
+    }
+
+    location / {
+        proxy_pass http://$GU_HOST:$GU_PORT;
+    }
+}
+  "
+  echo "$filestr" > $1
+}
+
+
+nginx_https () {
+  filestr=$"
+    ## sendfile        on;
+    ## keepalive_timeout  65;
 
     ## Rewrite http to https
     server {
@@ -15,7 +38,7 @@ nginx_conf () {
 
     ## Use https
     server {
-        add_header Strict-Transport-Security "max-age=63072000; includeSubdomains; ";
+        add_header Strict-Transport-Security \"max-age=63072000; includeSubdomains; \";
 
         listen              443 ssl;
         server_name         $NGINX_DOMAIN;
@@ -35,7 +58,7 @@ nginx_conf () {
         location / {
             proxy_set_header Host               $NGINX_HOST;
             proxy_set_header X-Real-IP          $NGINX_REMOTE;
-            proxy_set_header X-Forwarded-For    $proxy_add_x_forwarded_for;
+            # proxy_set_header X-Forwarded-For  $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Host   $NGINX_HOST:$NGINX_PORT;
             proxy_set_header X-Forwarded-Server $NGHINX_HOST;
             proxy_set_header X-Forwarded-Port   $NGINX_PORT;
@@ -49,4 +72,15 @@ nginx_conf () {
   echo "$filestr" > $1
 }
 
+
 source 'config/scripts.config'
+
+nginx_http "$NGINX_CONF"
+ln -sf "$NGINX_CONF" "$NGINX_CONF_LNK"
+
+[[ -f "$NGINX_DEFAULT_LNK" ]] && {
+  echo "Removing <$NGINX_DEFAULT_LNK>"
+  rm -f "$NGINX_DEFAULT_LNK"
+}
+
+service nginx restart

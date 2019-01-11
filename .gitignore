@@ -4,7 +4,7 @@
 logs/
 tledb/celerybeat.pid
 tledb/celerybeat-schedule.db
-.static/
+run/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -28,6 +28,7 @@ create_secret "$DJANGO_SECRETS" "$key"
 cd tledb
 python manage.py migrate
 python manage.py createsuperuser
+python manage.py collectstatic
 cd ..
 
 deactivate

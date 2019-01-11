@@ -14,6 +14,7 @@ source 'config/scripts.config'
 # 0) Create required directories
 mkdir -p "$SECRETS"
 mkdir -p "$CELERY_LOGS"
+mkdir -p "$STATIC_DIR"
 
 # 1) Install Debian packages
 sudo apt update && sudo apt -y full-upgrade
@@ -35,5 +36,9 @@ bash "$database_sh"
 # 5) Configure Django
 bash "$django_sh"
 
-# 5) Setup supervisor configuration
-sudo bash "$supervisor_sh"
+# 6) Setup supervisor configuration
+sudo bash "$celery_sh"
+sudo bash "$gunicorn_sh"
+
+# 7) Configure NGINX
+sudo bash "$nginx_sh"
