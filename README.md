@@ -1,5 +1,5 @@
 # tledb
-Database with the TLE's from NORAD, imported into a database and offered through a REST api.
+Database with the TLE's from NORAD, imported and offered through a REST api.
 
 The server is based on Django + Celery, where the latter timely fetches the
 TLE files from Celestrak and updates the database. django-rest-framework is
