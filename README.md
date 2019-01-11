@@ -17,6 +17,10 @@ Once installed, the service can be accessed directly through nginx+gunicorn (TBD
 
     python manage.py runserver
 
+Django admin is enabled and can be accessed as usual:
+
+    http://localhost/admin
+
 # API
 
 Available REST api can be explored by accessing the following url:
@@ -25,8 +29,8 @@ Available REST api can be explored by accessing the following url:
 
 Currently, the following two calls are available:
 
-    curl http://127.0.0.1:8000/api/tle
-    curl http://127.0.0.1:8000/api/tle?identifier=WISE
+    curl http://localhost/api/tle
+    curl http://localhost/api/tle?identifier=WISE
 
 The following parameter can be added to curl to pretty print the response from
 the server's API:
