@@ -13,7 +13,8 @@ The following script should guide you through the installation steps of the full
 
 # Running
 
-Once installed, the service can be accessed directly through nginx+gunicorn (TBD) or by running the Django development server:
+Once installed, the service can be accessed directly through nginx+gunicorn
+(TBD) or by running the Django development server:
 
     python manage.py runserver
 
