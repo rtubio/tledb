@@ -16,3 +16,19 @@ The following script should guide you through the installation steps of the full
 Once installed, the service can be accessed directly through nginx+gunicorn (TBD) or by running the Django development server:
 
     python manage.py runserver
+
+# API
+
+Available REST api can be explored by accessing the following url:
+
+    http://localhost/api
+
+Currently, the following two calls are available:
+
+    curl http://127.0.0.1:8000/api/tle
+    curl http://127.0.0.1:8000/api/tle?identifier=WISE
+
+The following parameter can be added to curl to pretty print the response from
+the server's API:
+
+    curl -H 'Accept: application/json; indent=4' ...
