@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Read TLE Objects</h2>
+
+<table align="center">
+  <tr><th>identifier</th><th>updated</th><th>line 1</th><th>line 2</th></tr>
+  {% for tle in object_list %}
+  <tr>
+    <td class="tle-td">{{ tle.identifier }}</td>
+    <td class="tle-td">{{ tle.timestamp }}</td>
+    <td class="tle-td">{{ tle.first_line }}</td>
+    <td class="tle-td">{{ tle.second_line }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% endblock %}

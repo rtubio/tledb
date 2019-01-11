@@ -1,10 +1,10 @@
 """tledb URL Configuration
 """
 
-from django.contrib import admin
 from django.conf.urls import url
-from django.urls import include, path
+from django.contrib import admin
 from django.contrib.auth.models import User
+from django.urls import include, path
 from rest_framework import routers
 
 from fetcher import views
@@ -16,6 +16,7 @@ router.register(r'tle', views.TLEViewSet)
 
 # Wire up our API using automatic URL routing.
 urlpatterns = [
-    url(r'^', include(router.urls)),
-    url(r'^admin/', admin.site.urls)
+    url(r'^$', views.TLEListView.as_view(), name='tle-list'),
+    url(r'^admin/', admin.site.urls),
+    url(r'^api/', include(router.urls)),
 ]
