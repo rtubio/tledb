@@ -57,4 +57,4 @@ CMD [\"/bin/bash\", \"$dck_launcher_sh\"]
 source 'config/scripts.config'
 source 'config/docker.config'
 
-config_dockerfile "$DOCKER_FILE"
+config_dockerfile "$DOCKER_FILE_TLEDB"

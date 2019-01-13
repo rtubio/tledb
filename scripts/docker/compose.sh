@@ -7,7 +7,7 @@
 #  - .:$DCK_TARGET_DIR\
 
 # @nginx:
-#  - .$DOCKER_NGINX_CONFD:$DCK_NGINX_CONFD
+#  - ../config/nginx-conf.d:$DCK_NGINX_CONFD
 #  - static_volume:$DCK_NGINX_STATIC
 
 config_compose() {
@@ -18,27 +18,26 @@ services:
   $DOCKER_APP_NAME:
     build:
       context: ../.
-      dockerfile: $DOCKER_FILE
-    ports:
-      - 9000:9000
+      dockerfile: $DOCKER_FILE_TLEDB
     networks:
       - nginx_network
       - db_network
     volumes:
-      - static_volume:/opt/services/tledb/static
+      - static_volume:$DCK_STATIC
     depends_on:
       - mysqldb
       - rabbitmq
 
   nginx:
-    image: nginx:latest
+    build:
+      context: ../.
+      dockerfile: $DOCKER_FILE_NGINX
     ports:
       - 8000:80
     depends_on:
       - $DOCKER_APP_NAME
     volumes:
-      - ../config/nginx-conf.d:/etc/nginx/conf.d
-      - static_volume:/opt/services/tledb/static
+      - static_volume:$DCK_STATIC
     networks:
       - nginx_network
 
