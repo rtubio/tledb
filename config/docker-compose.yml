@@ -6,6 +6,8 @@ services:
     build:
       context: ../.
       dockerfile: /home/rtubio/repositories/com.github.karbontek/tledb/config/dockerfile.tledb
+    restart: always
+    container_name: tledb-django
     networks:
       - nginx_network
       - db_network
@@ -19,6 +21,8 @@ services:
     build:
       context: ../.
       dockerfile: /home/rtubio/repositories/com.github.karbontek/tledb/config/dockerfile.nginx
+    restart: always
+    container_name: tledb-nginx
     ports:
       - 8000:80
     depends_on:
@@ -30,11 +34,15 @@ services:
 
   rabbitmq:
     image: rabbitmq:3
+    restart: always
+    container_name: tledb-rabbitmq
     networks:
       - db_network
 
   mysqldb:
     image: mysql:5.7
+    restart: always
+    container_name: tledb-mysql
     env_file:
       - /home/rtubio/repositories/com.github.karbontek/tledb/.secrets/mysql.env
     networks:

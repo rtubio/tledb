@@ -19,6 +19,8 @@ services:
     build:
       context: ../.
       dockerfile: $DOCKER_FILE_TLEDB
+    restart: always
+    container_name: $DOCKER_APP_NAME-django
     networks:
       - nginx_network
       - db_network
@@ -32,6 +34,8 @@ services:
     build:
       context: ../.
       dockerfile: $DOCKER_FILE_NGINX
+    restart: always
+    container_name: $DOCKER_APP_NAME-nginx
     ports:
       - 8000:80
     depends_on:
@@ -43,11 +47,15 @@ services:
 
   rabbitmq:
     image: rabbitmq:3
+    restart: always
+    container_name: $DOCKER_APP_NAME-rabbitmq
     networks:
       - db_network
 
   mysqldb:
     image: mysql:5.7
+    restart: always
+    container_name: $DOCKER_APP_NAME-mysql
     env_file:
       - $DOCKER_MYSQL_SECRETS
     networks:
