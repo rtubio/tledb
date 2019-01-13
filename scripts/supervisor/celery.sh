@@ -34,7 +34,3 @@ create_config\
   "$CELERY_BIN -A $DJANGO_APP_NAME worker -l $LOGL --scheduler $CELERY_SCH"\
   "$CELERY_WD"\
   "$CELERY_WORKER_LOG"
-
-# ### (3) restart supervisor
-echo "[INFO] Reloading <supervisor>"
-sudo supervisorctl reread && sudo supervisorctl reload

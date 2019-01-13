@@ -20,27 +20,9 @@ set global sql_mode='STRICT_TRANS_TABLES';
 }
 
 
-create_django_config () {
-  # Creates a file with the database configuration information for Django
-  # $1 : string with the path to the file
-
-  filestr=$"
-{
-  \"ngin\": \"django.db.backends.mysql\",
-  \"name\": \"$DBNAME\",
-  \"user\": \"$DBUSER\",
-  \"pass\": \"$password\",
-  \"host\": \"$DBHOST\",
-  \"port\": \"5439\"
-}
-  "
-
-  echo "$filestr" > "$1"
-}
-
-
 source "config/scripts.config"
 source "config/sql.config"
+source "$django_db_sh"
 
 echo -n 'Please input password for the new MySQL database user:'
 read -s password
@@ -55,7 +37,7 @@ echo
   echo 'Please input your <root> password to access the MySQL console:'
   sudo mysql -u root -p < "$sql_file"
   echo 'Creating the MYSQL JSON configuration for Django'
-  create_django_config "$MYSQL_SECRETS"
+  create_django_config "$MYSQL_SECRETS" "$password"
 } || {
   echo 'Passwords do not match, please execute again...'
 }

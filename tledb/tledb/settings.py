@@ -129,13 +129,16 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
-STATIC_ROOT = os.path.join(BASE_DIR, '../run/static')
+STATIC_ROOT = os.path.join(BASE_DIR, '../static')
 STATIC_URL = '/static/'
 
 
 # ### CELERY configuration
-CELERY_BROKER_URL = 'amqp://localhost'
-CELERY_RESULT_BACKEND = 'django-db'
+with open('../.secrets/celery.json') as file:
+    celery_secrets = json.load(file)
+
+CELERY_BROKER_URL = celery_secrets['broker']
+CELERY_RESULT_BACKEND =  celery_secrets['backend']
 
 
 # ### REST Framework

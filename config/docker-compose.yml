@@ -1,0 +1,55 @@
+
+version: '2'
+services:
+
+  tledb:
+    build:
+      context: ../.
+      dockerfile: /home/rtubio/repositories/com.github.karbontek/tledb/config/dockerfile
+    ports:
+      - 9000:9000
+    networks:
+      - nginx_network
+      - db_network
+    volumes:
+      - static_volume:/opt/services/tledb/static
+    depends_on:
+      - mysqldb
+      - rabbitmq
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - 8000:80
+    depends_on:
+      - tledb
+    volumes:
+      - ../config/nginx-conf.d:/etc/nginx/conf.d
+      - static_volume:/opt/services/tledb/static
+    networks:
+      - nginx_network
+
+  rabbitmq:
+    image: rabbitmq:3
+    networks:
+      - db_network
+
+  mysqldb:
+    image: mysql:5.7
+    env_file:
+      - /home/rtubio/repositories/com.github.karbontek/tledb/.secrets/mysql.env
+    networks:
+      - db_network
+    volumes:
+      - db_vol:/var/lib/mysql
+
+networks:
+  nginx_network:
+    driver: bridge
+  db_network:
+    driver: bridge
+
+volumes:
+  db_vol:
+  static_volume:
+

@@ -1,0 +1,29 @@
+
+FROM python:3.7.2-stretch
+ENV PYTHONUNBUFFERED 1
+EXPOSE 9000
+
+RUN mkdir -p /opt/services/tledb
+RUN mkdir -p /opt/services/tledb/logs
+RUN mkdir -p /opt/services/tledb/.secrets
+RUN mkdir -p /opt/services/tledb/static
+
+WORKDIR /opt/services/tledb
+
+RUN apt-get update && apt-get -y install supervisor sudo
+COPY config/requirements.txt /tmp/requirements.txt
+RUN pip install -r /tmp/requirements.txt
+
+COPY ./.secrets ./.secrets
+COPY ./config ./config
+COPY ./scripts ./scripts
+COPY ./tledb ./tledb
+
+RUN bash "scripts/docker/supervisor/dck-setup.sh"
+RUN bash "scripts/docker/django.sh"
+
+RUN useradd -ms /bin/bash tledb
+RUN chown tledb:tledb -R /opt/services/tledb
+
+CMD ["/bin/bash", "/opt/services/tledb/scripts/docker/launcher.sh"]
+  

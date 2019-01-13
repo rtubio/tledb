@@ -15,7 +15,3 @@ source 'scripts/supervisor/conf.sh'
 
 echo "[INFO] Creating config for '$GU_APP'"
 create_config "$GU_APP" "$GU_CONF" "$GU_COMMAND" "$GU_WD" "$GU_LOG"
-
-# ### (2) restart supervisor
-echo "[INFO] Reloading <supervisor>"
-sudo supervisorctl reread && sudo supervisorctl reload

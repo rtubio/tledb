@@ -39,6 +39,8 @@ bash "$django_sh"
 # 6) Setup supervisor configuration
 sudo bash "$celery_sh"
 sudo bash "$gunicorn_sh"
+echo "[INFO] Reloading <supervisor>"
+sudo supervisorctl reread && sudo supervisorctl reload
 
 # 7) Configure NGINX
 sudo bash "$nginx_sh"
