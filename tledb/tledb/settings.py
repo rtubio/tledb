@@ -16,19 +16,16 @@ with open('../.secrets/django.json') as file:
     django_secrets = json.load(file)
 SECRET_KEY = django_secrets['secret_key']
 
-ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost']
-DEBUG = True
-
-""" TODO Find what is the problem with this code... static files not served
-if sys.argv[1] == 'manage.py':
+if sys.argv[0] == 'manage.py':
     print('DEBUG activated for testing')
     ALLOWED_HOSTS = []
+    DBCONFIG = '../config/db-dev.json'
     DEBUG = True
 else:
     print('DEBUG deactivated for production')
     ALLOWED_HOSTS = ['0.0.0.0', 'localhost']
+    DBCONFIG = '../.secrets/mysql.json'
     DEBUG = False
-"""
 
 # Application definition
 INSTALLED_APPS = [
@@ -39,10 +36,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # ### additional apps
+    'django_registration',
     'django_filters',
     'django_celery_beat',
     'django_celery_results',
     'rest_framework',
+    'widget_tweaks',
     # ### custom appls
     'fetcher',
 ]
@@ -82,7 +81,7 @@ WSGI_APPLICATION = 'tledb.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-with open('../.secrets/mysql.json') as file:
+with open(DBCONFIG) as file:
     db_secrets = json.load(file)
 
 DATABASES = {
@@ -152,3 +151,9 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
 }
+
+
+# django-registration
+ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'

@@ -1,11 +1,14 @@
 amqp==2.3.2
 billiard==3.5.0.5
 celery==4.2.1
+confusable-homoglyphs==3.2.0
 Django==2.1.5
 django-celery-beat==1.4.0
 django-celery-results==1.0.4
 django-filter==2.0.0
+django-registration==3.0
 django-timezone-field==3.0
+django-widget-tweaks==1.4.3
 djangorestframework==3.9.0
 gunicorn==19.9.0
 kombu==4.2.2.post1

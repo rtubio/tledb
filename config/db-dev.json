@@ -1,0 +1,9 @@
+
+{
+  "ngin": "django.db.backends.sqlite3",
+  "name": "/tmp/tledb",
+  "user": "",
+  "pass": "",
+  "host": "",
+  "port": ""
+}

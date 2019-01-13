@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block container %}
+<div class="content form-field centered">
+
+{% if form.errors %}
+  <div class="alert alert-danger">
+    <p><strong>{% trans "Oh snap!" %}</strong> {% trans "Please enter a correct username and password. Note that both fields are case-sensitive." %}</p>
+  </div>
+{% endif %}
+
+<form
+  action="{% url 'login' %}"
+  method="post" class="form-horizontal" role="form">
+    {% csrf_token %}
+  <legend class="bottomed">
+    <span class="col-sm-12 centered">{% trans 'Log in' %}</span>
+  </legend>
+  <hr/>
+  {% for field in form %}
+    {% include 'registration/form_field.html' %}
+  {% endfor %}
+  <div class="form-group topped centered">
+    <hr/>
+    <div class="col-sm-12">
+      <div class="row">
+        <div class="col-sm-5"></div>
+        <div class="col-sm-1">
+          <button type="submit" class="btn btn-primary">
+            {% trans 'Login' %}
+          </button>
+        </div>
+        <div class="col-sm-1">
+          <a class="btn btn-light" href="{% url 'index' %}">
+            {% trans 'Cancel' %}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<hr/>
+<div class="row">
+  <div class="col-5"></div>
+  <div class="col-1">
+    <p><a href="{% url 'password_reset' %}">{% trans "Reset" %}</a></p>
+  </div>
+  <div class="col-1">
+    <p><a href="{% url 'django_registration_register' %}">
+      {% trans "Register" %}
+    </a></p>
+  </div>
+</div>
+
+<script type="text/javascript">
+$(function(){
+  $(".alert-message").alert();
+  $('#mainForm').submit(function(){$('#submit').button('loading');})
+});
+//document.forms[1].elements[2].focus();
+</script>
+
+</div>
+{% endblock %}

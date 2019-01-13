@@ -2,13 +2,6 @@
 
 # Simple script to create the docker file for the Django + Gunicorn app
 
-#volumes:
-# @tledb:
-#  - .:$DCK_TARGET_DIR\
-
-# @nginx:
-#  - ../config/nginx-conf.d:$DCK_NGINX_CONFD
-#  - static_volume:$DCK_NGINX_STATIC
 
 config_compose() {
   filestr="

@@ -2,10 +2,11 @@
 .tledb/
 .secrets/
 static/
+!tledb/**/static/
 logs/
+run/
 tledb/celerybeat.pid
 tledb/celerybeat-schedule.db
-run/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
