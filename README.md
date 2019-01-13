@@ -7,31 +7,37 @@ used to provide a basic REST api for remote users.
 
 # Setup
 
-The following script should guide you through the installation steps of the full stack:
+The following script should guide you through the installation steps of the
+full stack, which mainly guides the process through a Docker composition:
 
-    bash scripts/setup.sh
+  bash scripts/docker/setup.sh
+
+Once the docker composition is running, the superuser can be created by
+accessing the container directly:
+
+  docker exec -it config_tledb_1 bash
+  cd tledb && python manage.py createsuperuser
 
 # Running
 
-Once installed, the service can be accessed directly through nginx+gunicorn
-(TBD) or by running the Django development server:
+Once installed, the service can be accessed directly at:
 
-    python manage.py runserver
+  http://localhost:8000
 
 Django admin is enabled and can be accessed as usual:
 
-    http://localhost/admin
+  http://localhost:8000/admin
 
 # API
 
 Available REST api can be explored by accessing the following url:
 
-    http://localhost/api
+    http://localhost:8000/api
 
 Currently, the following two calls are available:
 
-    curl http://localhost/api/tle
-    curl http://localhost/api/tle?identifier=WISE
+    curl http://localhost:8000/api/tle
+    curl http://localhost:8000/api/tle?identifier=WISE
 
 The following parameter can be added to curl to pretty print the response from
 the server's API:

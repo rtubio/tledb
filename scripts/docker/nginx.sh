@@ -57,8 +57,6 @@ http {
   }
 
   server {
-    # use 'listen 80 deferred;' for Linux
-    # use 'listen 80 accept_filter=httpready;' for FreeBSD
     listen 80;
     charset utf-8;
     root $DCK_WORK_DIR;
