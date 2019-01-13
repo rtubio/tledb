@@ -1,6 +1,7 @@
 # Project Customizations
 .tledb/
 .secrets/
+static/
 logs/
 tledb/celerybeat.pid
 tledb/celerybeat-schedule.db
