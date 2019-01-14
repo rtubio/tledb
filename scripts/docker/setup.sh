@@ -7,6 +7,7 @@ bash "$dockerfile_sh"
 
 echo "2) Configuring the files for Django and the mySQL"
 bash "$docker_mysql_sh"
+bash "$docker_mail_sh"
 
 echo "3) Composing containers"
 bash "$docker_nginx_sh"

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% load bootstrap3 %}
+{% bootstrap_messages %}
+
+{% block container %}
+
+<form method="post">
+  {% csrf_token %}
+  {{ user_form.as_p }}
+  {{ profile_form.as_p }}
+  {% bootstrap_button "Save" button_type="submit" button_class="btn-primary" %}
+</form>
+
+{% endblock %}

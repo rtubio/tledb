@@ -17,6 +17,9 @@ services:
     networks:
       - nginx_network
       - db_network
+    ports:
+      - 9000:9000
+      - 9001:9001
     volumes:
       - static_volume:$DCK_STATIC
     depends_on:

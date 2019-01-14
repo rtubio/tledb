@@ -1,21 +1,26 @@
 {% load static %}
 {% load widget_tweaks %}
 
+
 <!DOCTYPE html>
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css"  href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.2.1/css/bootstrap.min.css"/>
   <link rel="stylesheet" type="text/css" href="{% static "tledb.css" %}"/>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js">
-  </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.2.1/js/bootstrap.min.js">
-  </script>
-
 </head>
 
 <body>
+
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js">
+  </script>
+
+  {% load bootstrap3 %}
+
+  {% bootstrap_css %}
+  {% bootstrap_javascript %}
+  {% bootstrap_messages %}
+
 
   {% block title %}
   <div><h1>tledb</h1></div>
@@ -26,16 +31,16 @@
     <a class="active" href="{% url 'index' %}">(tles)</a>
 
     {% if user.is_authenticated %}
-      <a href="{% url 'password_change' %}">{{ user.username }}</a>
-      <a href="{% url 'logout' %}">(logout)</a>
+      <a href="{% url 'user_profile_view' %}">{{ user.username }}</a>
+      <a href="{% url 'account_logout' %}">(logout)</a>
     {% else %}
-      <a href="{% url 'login' %}">(login)</a>
+      <a href="{% url 'account_login' %}">(login)</a>
     {% endif %}
 
   </div>
   {% endblock nav-style %}
 
-  {% block container %}
+  {% block content %}
   {% endblock %}
 
   <div class="topnav top-margin footer">

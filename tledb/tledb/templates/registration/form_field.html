@@ -1,11 +1,11 @@
 {% load widget_tweaks %}
 
 <div class="form-group {% if field.errors %}has-error{% endif %} centered">
-  <label for="{{ field.id_for_label }}" class="col-sm-2 control-label">
-    {{ field.label }}
-  </label>
   <div class="row">
-    <div class="col-xd-2 col-sm-3 col-md-4"></div>
+    <label for="{{ field.id_for_label }}"
+        class="col-xd-2 col-sm-3 col-md-4 control-label">
+      {{ field.label }}
+    </label>
     <div class="col-xd-8 col-sm-6 col-md-4">
         {{ field|add_class:'form-control input-lg' }}
         {% if field.errors %}

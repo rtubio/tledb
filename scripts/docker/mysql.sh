@@ -46,4 +46,5 @@ echo
 
 } || {
   echo 'Passwords do not match, please execute again...'
+  exit -1
 }

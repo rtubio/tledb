@@ -7,8 +7,23 @@ import sys
 Django settings for the tledb project.
 """
 
+if sys.argv[0] == 'manage.py' and sys.argv[1] == 'runserver':
+    print('DEBUG activated for testing')
+    ALLOWED_HOSTS = []
+    DBCONFIG = '../config/db-dev.json'
+    DEBUG = True
+    LOG_LEVEL = 'INFO'
+else:
+    print('DEBUG deactivated for production')
+    ALLOWED_HOSTS = ['0.0.0.0', 'localhost']
+    DBCONFIG = '../.secrets/mysql.json'
+    DEBUG = False
+    LOG_LEVEL = 'DEBUG'
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SITE_ID = 1
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -16,34 +31,31 @@ with open('../.secrets/django.json') as file:
     django_secrets = json.load(file)
 SECRET_KEY = django_secrets['secret_key']
 
-if sys.argv[0] == 'manage.py':
-    print('DEBUG activated for testing')
-    ALLOWED_HOSTS = []
-    DBCONFIG = '../config/db-dev.json'
-    DEBUG = True
-else:
-    print('DEBUG deactivated for production')
-    ALLOWED_HOSTS = ['0.0.0.0', 'localhost']
-    DBCONFIG = '../.secrets/mysql.json'
-    DEBUG = False
 
-# Application definition
 INSTALLED_APPS = [
+    # Pre-shipped apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.sites',
     'django.contrib.staticfiles',
     # ### additional apps
-    'django_registration',
-    'django_filters',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'bootstrap3',
+    'bootstrapform',
     'django_celery_beat',
     'django_celery_results',
+    'django_filters',
+    'django_tables2',
     'rest_framework',
     'widget_tweaks',
-    # ### custom appls
+    # ### custom apps
     'fetcher',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -79,6 +91,43 @@ TEMPLATES = [
 WSGI_APPLICATION = 'tledb.wsgi.application'
 
 
+# ### Logging settings
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'formatters': {
+        'verbose': {
+            'format': '%(asctime)s %(levelname)s [%(name)s:%(lineno)s] %(module)s %(process)d %(thread)d %(message)s'
+        }
+    },
+    'handlers': {
+        'console': {
+            'level': LOG_LEVEL,
+            'class': 'logging.StreamHandler',
+            'stream': sys.stdout,
+            'formatter': 'verbose'
+        }
+    },
+    'loggers': {
+        'django':{
+            'level': LOG_LEVEL,
+            'handlers': ['console'],
+            'propagate': True,
+        },
+       'gunicorn.errors': {
+            'level': LOG_LEVEL,
+            'handlers': ['console'],
+            'propagate': True,
+        }
+    },
+}
+
+
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 with open(DBCONFIG) as file:
@@ -98,6 +147,16 @@ DATABASES = {
         }
     }
 }
+
+
+# Authenticaion backends, added because of django-allauth
+# https://django-allauth.readthedocs.io/en/latest/installation.html
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
 
 
 # Password validation
@@ -132,6 +191,27 @@ STATIC_ROOT = os.path.join(BASE_DIR, '../static')
 STATIC_URL = '/static/'
 
 
+# ### django-allauth
+LOGIN_REDIRECT_URL = '/'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'
+ACCOUNT_USERNAME_REQUIRED = False
+
+
+# ### email backend
+with open('../.secrets/mail.json') as file:
+    email_secrets = json.load(file)
+
+EMAIL_BACKEND = email_secrets['back']
+EMAIL_HOST = email_secrets['host']
+EMAIL_PORT = email_secrets['port']
+EMAIL_HOST_USER = email_secrets['user']
+EMAIL_HOST_PASSWORD = email_secrets['pass']
+EMAIL_USE_TLS = True
+
+
 # ### CELERY configuration
 with open('../.secrets/celery.json') as file:
     celery_secrets = json.load(file)
@@ -151,9 +231,3 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
 }
-
-
-# django-registration
-ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'

@@ -1,7 +1,7 @@
 
 FROM python:3.7.2-stretch
 ENV PYTHONUNBUFFERED 1
-EXPOSE 9000
+EXPOSE 19001
 
 RUN mkdir -p /opt/services/tledb
 RUN mkdir -p /opt/services/tledb/logs

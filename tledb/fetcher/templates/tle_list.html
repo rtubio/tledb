@@ -1,32 +1,22 @@
 {% extends "base.html" %}
+{% load bootstrap3 %}
+{% load render_table from django_tables2 %}
 
-{% block container %}
 
-<h2>Latest TLE Objects</h2>
+{% block content %}
 
-<table align="center">
-  {% if object_list %}
-    <tr>
-      <th class="tle-td">identifier</th>
-      <th class="tle-td">updated</th>
-      <th class="tle-td">line 1</th>
-      <th class="tle-td">line 2</th>
-    </tr>
-    {% for tle in object_list %}
-      <tr>
-        <td class="tle-td small">{{ tle.identifier }}</td>
-        <td class="tle-td small">{{ tle.timestamp }}</td>
-        <td class="tle-td-raw">{{ tle.first_line }}</td>
-        <td class="tle-td-raw">{{ tle.second_line }}</td>
-      </tr>
-    {% endfor %}
-  {% else %}
-    <tr><td class="tle-td" colspan="4">
-      <div class="alert-danger">
-        (database uninitialized - configure periodic scraping through admin)
-      </div>
-    </td></tr>
-  {% endif %}
-</table>
+<h1 class="topped bottomed">Latest TLE Objects</h1>
+
+{% if object_list %}
+  {% render_table table %}
+{% else %}
+  <div class="row centered">
+    <div class="col-4"></div>
+    <div class="col-4">
+      {% bootstrap_alert "Database not populated" alert_type='warning' %}
+      {% bootstrap_alert "Add a periodic scrapping task" alert_type='info' %}
+    </div>
+  </div>
+{% endif %}
 
 {% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% load bootstrap3 %}
+{% bootstrap_messages %}
+
+{% block content %}
+
+<h2 class="bottomed">{{ user.email }}</h2>
+<hr class="bottomed"/>
+
+<div class="row centered">
+    <ul class="plainlist">
+      <li>hook: {{ user.profile.hook }}</li>
+      <li>tles: {{ user.profile.tles }}</li>
+    </ul>
+</div>
+
+<hr class="topped"/>
+{% buttons %}
+<div class="topped centered row">
+  <div class="col-4"></div>
+  <div class="col-4">
+    <button class="btn btn-primary"
+      onclick="location.href = '{% url 'user_profile_update' %}';">
+      (edit)
+    </button>
+  </div>
+<div/>
+{% endbuttons %}
+
+
+{% endblock %}

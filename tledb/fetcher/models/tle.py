@@ -207,23 +207,19 @@ class TLE(models.Model):
     objects = TLEManager()
 
     identifier = models.CharField(
-        'Identifier of the spacecraft that this TLE element models (line 0)',
-        max_length=MAX_TLE_ID_LEN,
-        unique=True
+        'Spacecraft', max_length=MAX_TLE_ID_LEN, unique=True
     )
 
-    timestamp = models.BigIntegerField(
-        'Timestamp with the update date for this TLE'
-    )
+    timestamp = models.BigIntegerField('Timestamp')
 
     source = models.TextField(
-        'String that indicates the source of this TLE',
+        'Source',
         max_length=100,
         validators=[validators.URLValidator()]
     )
 
     first_line = models.CharField(
-        'First line of this TLE',
+        'L1',
         max_length=MAX_TLE_LINE_LEN,
         validators=[
             validators.RegexValidator(
@@ -233,8 +229,9 @@ class TLE(models.Model):
             )
         ]
     )
+
     second_line = models.CharField(
-        'Second line of this TLE',
+        'L2',
         max_length=MAX_TLE_LINE_LEN,
         validators=[
             validators.RegexValidator(

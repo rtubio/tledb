@@ -11,6 +11,9 @@ services:
     networks:
       - nginx_network
       - db_network
+    ports:
+      - 9000:9000
+      - 9001:9001
     volumes:
       - static_volume:/opt/services/tledb/static
     depends_on:
