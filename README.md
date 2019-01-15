@@ -1,21 +1,27 @@
-# tledb
-Database with the TLE's from NORAD, imported and offered through a REST api.
+# tledb - application overview
 
-The server is based on Django + Celery, where the latter timely fetches the
-TLE files from Celestrak and updates the database. django-rest-framework is
-used to provide a basic REST api for remote users.
+Database with the TLE's from NORAD, imported and offered through a REST api:
+
+* The server is based on Django + Celery, where the latter timely fetches the TLE files from Celestrak and updates the database.
+* django-rest-framework is used to provide a basic REST api for remote users.
+* A webhook is implemented, so that a given URL is called whenever the TLEs selected by the user are updated.
+
+Docker is used to wire up the following components:
+
+* tledb-django -- Django webserver executed using Gunicorn and running celery instances (beat and worker). Supervisor controls the execution of gunicorn and celery instances.
+* tledb-nginx -- simple nginx container.
+* tledb-rabbitmq -- rabbitmq server from Docker Hub.
+* tledb-mysql -- mysql server from Docker Hub.
 
 # Setup
 
-The following script should guide you through the installation steps of the
-full stack, which mainly guides the process through a Docker composition:
+The following script should guide you through the installation steps of the full stack, which mainly guides the process through a Docker composition:
 
   bash scripts/docker/setup.sh
 
-Once the docker composition is running, the superuser can be created by
-accessing the container directly:
+Once the docker composition is running, the superuser can be created by accessing the container directly:
 
-  docker exec -it config_tledb_1 bash
+  docker exec -it tledb-django bash
   cd tledb && python manage.py createsuperuser
 
 # Running
@@ -39,7 +45,6 @@ Currently, the following two calls are available:
     curl http://localhost:8000/api/tle
     curl http://localhost:8000/api/tle?identifier=WISE
 
-The following parameter can be added to curl to pretty print the response from
-the server's API:
+The following parameter can be added to curl to pretty print the response from the server's API:
 
     curl -H 'Accept: application/json; indent=4' ...
