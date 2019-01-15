@@ -15,3 +15,4 @@ bash "$docker_compose_sh"
 
 echo "4) Creating the composition"
 docker-compose -f "$DOCKER_COMPOSE" build
+docker-compose -f "$DOCKER_COMPOSE" up -d

@@ -11,7 +11,7 @@ services:
   $DOCKER_APP_NAME:
     build:
       context: ../.
-      dockerfile: $DOCKER_FILE_TLEDB
+      dockerfile: $DOCKER_FILE_TLEDB_REL
     restart: always
     container_name: $DOCKER_APP_NAME-django
     networks:
@@ -26,7 +26,7 @@ services:
   nginx:
     build:
       context: ../.
-      dockerfile: $DOCKER_FILE_NGINX
+      dockerfile: $DOCKER_FILE_NGINX_REL
     restart: always
     container_name: $DOCKER_APP_NAME-nginx
     ports:
@@ -50,7 +50,7 @@ services:
     restart: always
     container_name: $DOCKER_APP_NAME-mysql
     env_file:
-      - $DOCKER_MYSQL_SECRETS
+      - $DOCKER_MYSQL_SECRETS_REL
     networks:
       - db_network
     volumes:
