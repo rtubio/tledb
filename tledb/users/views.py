@@ -1,7 +1,8 @@
 
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.db import transaction
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 from .forms import ProfileForm, UserForm
 
@@ -16,11 +17,11 @@ def update_profile(request):
             user_form.save()
             profile_form.save()
             messages.success(
-                request, _('Your profile was successfully updated!')
+                request, 'Your profile was successfully updated!'
             )
-            return redirect('settings:profile')
+            return redirect('user_profile_view')
         else:
-            messages.error(request, _('Please correct the error below.'))
+            messages.error(request, 'Please correct the error below.')
     else:
         user_form = UserForm(instance=request.user)
         profile_form = ProfileForm(instance=request.user.profile)

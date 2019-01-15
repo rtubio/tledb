@@ -4,7 +4,7 @@
 
 
 config_compose() {
-  filestr="
+  echo "
 version: '2'
 services:
 
@@ -17,9 +17,6 @@ services:
     networks:
       - nginx_network
       - db_network
-    ports:
-      - 9000:9000
-      - 9001:9001
     volumes:
       - static_volume:$DCK_STATIC
     depends_on:
@@ -68,8 +65,7 @@ networks:
 volumes:
   db_vol:
   static_volume:
-"
-  echo "$filestr" > $1
+  " > $1
 }
 
 source 'config/scripts.config'
