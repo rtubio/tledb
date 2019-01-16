@@ -11,8 +11,8 @@ RUN mkdir -p /opt/services/tledb/static
 WORKDIR /opt/services/tledb
 
 RUN apt-get update && apt-get -y install supervisor sudo
-COPY config/requirements.txt /tmp/requirements.txt
-RUN pip install -r /tmp/requirements.txt
+COPY config/requirements.txt requirements.txt
+RUN pip install -r requirements.txt
 
 COPY ./.secrets ./.secrets
 COPY ./config ./config

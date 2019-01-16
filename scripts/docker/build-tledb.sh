@@ -34,8 +34,8 @@ RUN mkdir -p $DCK_NGINX_STATIC
 WORKDIR $DCK_WORK_DIR
 
 RUN apt-get update && apt-get -y install supervisor sudo
-COPY config/requirements.txt /tmp/requirements.txt
-RUN pip install -r /tmp/requirements.txt
+COPY config/requirements.txt requirements.txt
+RUN pip install -r requirements.txt
 
 COPY ./.secrets ./.secrets
 COPY ./config ./config
