@@ -1,3 +1,5 @@
+[![Coverage Status](https://coveralls.io/repos/github/rtubio/tledb/badge.svg?branch=master)](https://coveralls.io/github/rtubio/tledb?branch=master)
+
 # tledb - application overview
 
 Database with the TLE's from NORAD, imported and offered through a REST api:
