@@ -32,4 +32,8 @@ jobs:
       env:
         github-token: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        clear && pip install coveralls && cd tledb && export __DJ_DEVPROD='dev' && coverage run --source=common,fetcher,users manage.py test; coveralls
+        pip install coveralls
+        cd tledb
+        export __DJ_DEVPROD='dev'
+        coverage run --source=common,fetcher,users manage.py test
+        coveralls
