@@ -25,6 +25,11 @@ create_secret "$DJANGO_SECRETS" "$key"
 create_mail_secrets "$MAIL_SECRETS" 'localhost' '6666' 'test' 'test'
 create_celery_conf "$DJANGO_CELERY_CONF"
 
+
+#     - name: Coveralls
+#       uses: coverallsapp/github-action@master
+
+
 # ACTIVATE Only if necessary for testing
 # 2) migrate the database and create superuser
 # cd tledb
