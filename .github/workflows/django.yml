@@ -29,7 +29,7 @@ jobs:
       run: |
         bash scripts/setup_test.sh
     - name: Run Tests
-      run: |
-        clear && pip install coveralls && cd tledb && export __DJ_DEVPROD='dev' && coverage run --source=common,fetcher,users manage.py test && coveralls; cd ..
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        clear && pip install coveralls && cd tledb && export __DJ_DEVPROD='dev' && coverage run --source=common,fetcher,users manage.py test && coveralls; cd ..
