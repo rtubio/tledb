@@ -17,4 +17,6 @@ mkdir -p "$CELERY_LOGS"
 mkdir -p "$STATIC_DIR"
 
 # 1) Configure Django
-bash "$django_sh"
+source "$django_sh"
+key="$( python $django_skg )"
+create_secret "$DJANGO_SECRETS" "$key"
