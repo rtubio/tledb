@@ -35,5 +35,5 @@ jobs:
         pip install coveralls
         cd tledb
         export __DJ_DEVPROD='dev'
-        coverage run --source=common,fetcher,users manage.py test
+        coverage run --rcfile='../config/coverage.conf' manage.py test
         coveralls
