@@ -3,6 +3,8 @@
 
 # tledb - application overview
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/77cd187ba2c5436f8cd02627f5dda2db)](https://app.codacy.com/gh/rtubio/tledb?utm_source=github.com&utm_medium=referral&utm_content=rtubio/tledb&utm_campaign=Badge_Grade)
+
 Database with the TLE's from NORAD, imported and offered through a REST api:
 
 * The server is based on Django + Celery, where the latter timely fetches the TLE files from Celestrak and updates the database.
