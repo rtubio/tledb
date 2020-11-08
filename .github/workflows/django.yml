@@ -27,6 +27,6 @@ jobs:
         pip install -r config/requirements.txt
     - name: Run Tests
       run: |
-        python manage.py test
+        python tledb/manage.py test
     - name: Coveralls GitHub Action
       uses: coverallsapp/github-action@v1.1.2
