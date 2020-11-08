@@ -11,6 +11,7 @@
 
 source 'config/scripts.config'
 source "$django_skg_file"
+source "$gen_mail_file"
 
 # 0) Create required directories
 mkdir -p "$SECRETS"
@@ -20,3 +21,4 @@ mkdir -p "$STATIC_DIR"
 # 1) Configure Django
 key="$( python $django_skg )"
 create_secret "$DJANGO_SECRETS" "$key"
+create_mail_secrets "localhost" "6666" "test" "test"
