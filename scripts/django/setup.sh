@@ -3,23 +3,10 @@
 # Small script to configure Django 'tledb' application
 
 
-create_celery_conf() {
-  # Creates the configuration for Celery / RabittMQ
-  # $1 : path to the secrets file to be created
-
-  echo "
-{
-  \"broker\": \"amqp://localhost\",
-  \"backend\": \"django-db\"
-}
-  " > $1
-
-}
-
-
 source 'config/scripts.config'
 source "$VENV_ACTIVATE"
 source "$django_skg_file"
+source "$gen_celery_conf"
 
 # 1) create secret key
 key="$( python $django_skg )"
