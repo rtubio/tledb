@@ -10,6 +10,7 @@
 
 
 source 'config/scripts.config'
+source "$django_skg_file"
 
 # 0) Create required directories
 mkdir -p "$SECRETS"
@@ -17,6 +18,5 @@ mkdir -p "$CELERY_LOGS"
 mkdir -p "$STATIC_DIR"
 
 # 1) Configure Django
-source "$django_sh"
 key="$( python $django_skg )"
 create_secret "$DJANGO_SECRETS" "$key"
