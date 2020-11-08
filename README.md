@@ -1,8 +1,8 @@
 # tledb - application overview
 
+![Django CI](https://github.com/rtubio/tledb/workflows/Django%20CI/badge.svg?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/rtubio/tledb/badge.svg?branch=master)](https://coveralls.io/github/rtubio/tledb?branch=master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/77cd187ba2c5436f8cd02627f5dda2db)](https://app.codacy.com/gh/rtubio/tledb?utm_source=github.com&utm_medium=referral&utm_content=rtubio/tledb&utm_campaign=Badge_Grade)
-![Django CI](https://github.com/rtubio/tledb/workflows/Django%20CI/badge.svg?branch=master)
 
 Database with the TLE's from NORAD, imported and offered through a REST api:
 
