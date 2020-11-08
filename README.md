@@ -1,4 +1,5 @@
 [![Coverage Status](https://coveralls.io/repos/github/rtubio/tledb/badge.svg?branch=master)](https://coveralls.io/github/rtubio/tledb?branch=master)
+![Django CI](https://github.com/rtubio/tledb/workflows/Django%20CI/badge.svg?branch=master)
 
 # tledb - application overview
 
