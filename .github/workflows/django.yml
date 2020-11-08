@@ -33,3 +33,5 @@ jobs:
         cd tledb && export __DJ_DEVPROD='dev' && python manage.py test; cd ..
     - name: Coveralls GitHub Action
       uses: coverallsapp/github-action@v1.1.2
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
