@@ -31,3 +31,7 @@ jobs:
     - name: Run Tests
       run: |
         clear && pip install coveralls && cd tledb && export __DJ_DEVPROD='dev' && coverage run --source=common,fetcher,users manage.py test && coveralls; cd ..
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
