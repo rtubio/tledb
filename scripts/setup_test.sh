@@ -21,4 +21,4 @@ mkdir -p "$STATIC_DIR"
 # 1) Configure Django
 key="$( python $django_skg )"
 create_secret "$DJANGO_SECRETS" "$key"
-create_mail_secrets "localhost" "6666" "test" "test"
+create_mail_secrets "$MAIL_SECRETS" 'localhost' '6666' 'test' 'test'
