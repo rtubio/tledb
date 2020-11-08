@@ -30,7 +30,7 @@ jobs:
         bash scripts/setup_test.sh
     - name: Run Tests
       run: |
-        cd tledb && export __DJ_DEVPROD='dev' && coverage run --source=common,fetcher,users manage.py test && coveralls; cd ..
+        pip install coveralls && cd tledb && export __DJ_DEVPROD='dev' && coverage run --source=common,fetcher,users manage.py test && coveralls; cd ..
     - name: Coveralls GitHub Action
       uses: coverallsapp/github-action@v1.1.2
       with:
