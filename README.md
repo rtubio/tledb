@@ -22,22 +22,22 @@ Docker is used to wire up the following components:
 
 The following script should guide you through the installation steps of the full stack, which mainly guides the process through a Docker composition:
 
-  bash scripts/docker/setup.sh
+    bash scripts/docker/setup.sh
 
 Once the docker composition is running, the superuser can be created by accessing the container directly:
 
-  docker exec -it tledb-django bash
-  cd tledb && python manage.py createsuperuser
+    docker exec -it tledb-django bash
+    cd tledb && python manage.py createsuperuser
 
 # Running
 
 Once installed, the service can be accessed directly at:
 
-  http://localhost:8000
+    http://localhost:8000
 
 Django admin is enabled and can be accessed as usual:
 
-  http://localhost:8000/admin
+    http://localhost:8000/admin
 
 # API
 
