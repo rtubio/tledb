@@ -30,7 +30,7 @@ jobs:
         bash scripts/setup_test.sh
     - name: Run Tests
       env:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         pip install coveralls
         cd tledb
