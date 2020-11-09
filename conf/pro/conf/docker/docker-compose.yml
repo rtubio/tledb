@@ -5,7 +5,7 @@ services:
   tledb:
     build:
       context: ../.
-      dockerfile: config/dockerfile.tledb
+      dockerfile: conf/docker/dockerfile.tledb
     restart: always
     container_name: tledb-django
     networks:
@@ -20,7 +20,7 @@ services:
   nginx:
     build:
       context: ../.
-      dockerfile: config/dockerfile.nginx
+      dockerfile: conf/docker/dockerfile.nginx
     restart: always
     container_name: tledb-nginx
     ports:
@@ -59,4 +59,3 @@ networks:
 volumes:
   db_vol:
   static_volume:
-  

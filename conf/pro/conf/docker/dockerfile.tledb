@@ -11,19 +11,17 @@ RUN mkdir -p /opt/services/tledb/static
 WORKDIR /opt/services/tledb
 
 RUN apt-get update && apt-get -y install supervisor sudo
-COPY config/requirements.txt requirements.txt
+COPY conf/requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
 COPY ./.secrets ./.secrets
-COPY ./config ./config
-COPY ./scripts ./scripts
+COPY ./conf ./conf
 COPY ./tledb ./tledb
 
-RUN bash "scripts/docker/supervisor/dck-setup.sh"
-RUN bash "scripts/docker/django.sh"
+RUN bash "conf/scripts/docker/supervisor/dck-setup.sh"
+RUN bash "conf/scripts/docker/django.sh"
 
 RUN useradd -ms /bin/bash tledb
 RUN chown tledb:tledb -R /opt/services/tledb
 
-CMD ["/bin/bash", "/opt/services/tledb/scripts/docker/launcher.sh"]
-  
+CMD ["/bin/bash", "/opt/services/tledb/conf/scripts/docker/launcher.sh"]

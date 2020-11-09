@@ -4,6 +4,7 @@ celery==4.2.1
 certifi==2018.11.29
 chardet==3.0.4
 confusable-homoglyphs==3.2.0
+coveralls
 defusedxml==0.5.0
 Django==2.2.13
 django-allauth==0.38.0

@@ -1,0 +1,9 @@
+.env/
+.git/
+.github/
+.secrets/
+logs/
+static/
+.tledb.code-workspace
+LICENSE
+README.md

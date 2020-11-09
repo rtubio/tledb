@@ -1,6 +1,0 @@
-mysql-server
-rabbitmq-server
-supervisor
-nginx
-docker
-docker-compose

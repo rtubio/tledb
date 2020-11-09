@@ -1,0 +1,23 @@
+FROM python:3.9-buster
+ENV PYTHONUNBUFFERED 1
+
+ARG DOCKER_ROOT='/opt/tledb'
+ARG PKGS_DEB='debian.packages'
+ARG PKGS_PY='requirements.txt'
+ARG USER='tledb'
+
+# ### Link this folder to the outer folder for code edition
+# RUN mkdir -p /opt/services/tledb
+RUN mkdir -p ${DOCKER_ROOT}
+
+COPY ./conf ./conf
+COPY ./tledb ./tledb
+
+RUN apt update
+RUN cat ${PKGS_DEB} | xargs apt-get install -y
+RUN pip install -r ${PKGS_PY}
+
+RUN useradd -ms /bin/bash ${USER}
+RUN chown ${USER}:${USER} -R ${DOCKER_ROOT}
+
+CMD ["/bin/bash"]

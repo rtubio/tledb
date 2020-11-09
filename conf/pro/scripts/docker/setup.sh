@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source 'config/scripts.config'
+source 'conf/scripts.config'
 
 echo "1) Creating Dockerfile for Django+Gunicorn"
 bash "$dockerfile_sh"

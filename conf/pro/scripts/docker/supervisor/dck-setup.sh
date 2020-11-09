@@ -3,9 +3,10 @@
 # Adapts a basic supervisor configuration for Docker.
 
 
-source 'config/scripts.config'
-source 'config/docker.config'
-source 'scripts/docker/supervisor/conf.sh'
+source 'conf/env-all.conf'
+source 'conf/env-prod.conf'
+source 'conf/env-prod/docker/docker.config'
+source 'conf/scripts/docker/supervisor/conf.sh'
 
 # ### (1) BEAT Configuration for Supervisor
 echo "[INFO] Creating config for '$CELERY_BEAT_APP'"
