@@ -16,10 +16,6 @@ source "$gen_celery_conf"
 source "$setup_dev_env"
 source "$setup_os_packages"
 
-echo "> SECRETS_D = $SECRETS_D"
-echo "> LOGS_D = $LOGS_D"
-echo "> STATIC_D = $STATIC_D"
-
 # 0) Create required directories
 mkdir -p "$SECRETS_D"
 mkdir -p "$LOGS_D"
@@ -28,7 +24,7 @@ mkdir -p "$STATIC_D"
 # 1) A development environment is created, although in the docker container it will not be necessary.
 [[ ! -f "$VENV_ACTIVATE" ]] && {
     echo "「インフォ」Python environment unavailable, installing..."
-    setup_os_packages "$PACKAGES_FILE" &&\
+    setup_os_packages "$PACKAGES_FILE"
     setup_dev_env "$REQUIREMENTS_FILE" "$VENV_D" "$VENV_ACTIVATE"
 }
 
