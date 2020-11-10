@@ -21,16 +21,11 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Load custom environment
-      run: |
-        source 'conf/paths.conf'
-        echo "tledb_py_pkgs=$REQUIREMENTS_FILE" >> $GITHUB_ENV
-        echo "tledb_coverage_rc=$COVERAGE_CONF" >> $GITHUB_ENV
     - name: Install Dependencies
       run: |
-        echo $tledb_py_pkgs
+        source 'conf/paths.conf'
         python -m pip install --upgrade pip
-        pip install -r conf/requirements.txt
+        pip install -r "$REQUIREMENTS_FILE"
     - name: Setup Test Environment
       run: |
         bash conf/dev/setup.sh
@@ -38,7 +33,5 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        cd tledb
-        export __DJ_DEVPROD='dev'
-        coverage run --rcfile='../conf/dev/coverage.conf' manage.py test
-        coveralls
+        source 'conf/paths.conf'
+        cd tledb && export __DJ_DEVPROD='dev' && coverage run --rcfile="$COVERAGE_CONF" manage.py test && coveralls
