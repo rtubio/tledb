@@ -21,9 +21,9 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Load custom environment
       run: |
-        bash 'conf/dev/gen-ghenv.sh'
-        cat '.github/.env' >> $GITHUB_ENV
+        bash 'conf/dev/gen-ghenv.sh' >> $GITHUB_ENV
     - name: Install Dependencies
       run: |
         echo ${{ tledb.PKGS_PY }}
