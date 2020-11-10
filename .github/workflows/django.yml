@@ -23,8 +23,9 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Load custom environment
       run: |
-        bash 'conf/dev/gen-ghenv.sh'
-        bash 'conf/dev/gen-ghenv.sh' >> $GITHUB_ENV
+        source 'conf/paths.conf'
+        echo "tledb_py_pkgs=$REQUIREMENTS_FILE" >> $GITHUB_ENV
+        echo "tledb_coverage_rc=$COVERAGE_CONF" >> $GITHUB_ENV
     - name: Install Dependencies
       run: |
         echo "$tledb_py_pkgs"
