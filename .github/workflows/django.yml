@@ -23,10 +23,10 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Load custom environment
       run: |
-        echo "action_state=yellow" >> $GITHUB_ENV
+        bash 'conf/dev/gen-ghenv.sh' >> $GITHUB_ENV
     - name: Install Dependencies
       run: |
-        echo "$action_state"
+        echo "$tledb_py_pkgs"
         python -m pip install --upgrade pip
         pip install -r conf/requirements.txt
     - name: Setup Test Environment
