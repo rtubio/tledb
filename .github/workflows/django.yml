@@ -24,11 +24,11 @@ jobs:
     - name: Load custom environment
       run: |
         source 'conf/paths.conf'
-        echo "tledb_py_pkgs=$REQUIREMENTS_FILE" >> $GITHUB_ENV
-        echo "tledb_coverage_rc=$COVERAGE_CONF" >> $GITHUB_ENV
+        echo "tledb.py_pkgs=$REQUIREMENTS_FILE" >> $GITHUB_ENV
+        echo "tledb.coverage_rc=$COVERAGE_CONF" >> $GITHUB_ENV
     - name: Install Dependencies
       run: |
-        echo "$tledb_py_pkgs"
+        echo ${{ tledb.py_pkgs }}
         python -m pip install --upgrade pip
         pip install -r conf/requirements.txt
     - name: Setup Test Environment
