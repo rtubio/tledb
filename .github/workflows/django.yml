@@ -24,16 +24,15 @@ jobs:
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r conf/production/conf/requirements.txt
-        pip install -r conf/development/conf/requirements.txt
+        pip install -r conf/requirements.txt
     - name: Setup Test Environment
       run: |
-        bash scripts/setup_test.sh
+        bash conf/dev/setup.sh
     - name: Run Tests
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         cd tledb
         export __DJ_DEVPROD='dev'
-        coverage run --rcfile='../conf/development/conf/coverage.conf' manage.py test
+        coverage run --rcfile='../conf/dev/coverage.conf' manage.py test
         coveralls
