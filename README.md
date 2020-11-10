@@ -19,15 +19,21 @@ Docker is used to wire up the following components:
 * tledb-mysql -- mysql server from Docker Hub.
 
 # Setup
+## Testing Environment
 
-The following script should guide you through the installation steps of the full stack, which mainly guides the process through a Docker composition:
+To set up the testing environment, it is necessary to configure the current working directory as the development directory. During this configuration step, several credentials for development are configured to facilitate the development process itself. In order to configure the current working directory this way, a helper script is provided under the "conf/dev" directory; to be executed in the follwing way:
 
-    bash scripts/docker/setup.sh
+    bash conf/dev/setup.sh
 
-Once the docker composition is running, the superuser can be created by accessing the container directly:
+Once the current directory has been configured for development, the Docker image can be built and run using the provided helper bash script in the following way:
 
-    docker exec -it tledb-django bash
-    cd tledb && python manage.py createsuperuser
+    bash conf/dev/run.sh
+
+The first time the previous script is executed, it will build a docker image and, therefore, the process can be a little bit lengthy. Subsequent executions of the same script should be quicker.
+
+## Production Environment
+
+* This section is still to be written.
 
 # Running
 

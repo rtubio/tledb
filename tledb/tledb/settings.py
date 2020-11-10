@@ -10,7 +10,7 @@ Django settings for the tledb project.
 if '__DJ_DEVPROD' in os.environ and os.environ['__DJ_DEVPROD'] == 'dev':
     print('DEBUG activated for testing')
     ALLOWED_HOSTS = []
-    DBCONFIG = '../config/db-dev.json'
+    DBCONFIG = '../conf/dev/db-dev.json'
     DEBUG = True
     LOG_LEVEL = 'INFO'
 else:
