@@ -97,6 +97,7 @@ def get_next_midnight():
     """
     This method returns today's datetime 00am.
     :return: the just created datetime object with today's datetime 00am.
+    TODO :: unit test
     """
     return pytz.utc.localize(datetime.datetime.today()).replace(
         hour=0, minute=0, second=0, microsecond=0
@@ -108,30 +109,13 @@ def localize_date_utc(date):
     Localizes in the UTC timezone the given date object.
     :param date: The date object to be localized.
     :return: A localized datetime object in the UTC timezone.
+    TODO :: unit test
     """
     return pytz.utc.localize(
         datetime.datetime.combine(
             date, datetime.time(hour=0, minute=0, second=0)
         )
     )
-
-
-def localize_datetime_utc(date_time):
-    """
-    Localizes in the UTC timezone a given Datetime object.
-    :param date_time: The object to be localized.
-    :return: Localized Datetime object in the UTC timezone.
-    """
-    return pytz.utc.localize(date_time)
-
-
-def localize_time_utc(non_utc_time):
-    """
-    Localizes in the UTC timezone the given time object.
-    :param non_utc_time: The time object to be localized.
-    :return: A localized time object in the UTC timezone.
-    """
-    return pytz.utc.localize(non_utc_time)
 
 
 TIMESTAMP_0 = localize_date_utc(datetime.datetime(year=1970, month=1, day=1))

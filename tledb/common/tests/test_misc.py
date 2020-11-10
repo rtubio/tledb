@@ -29,7 +29,13 @@ __author__ = 'rtpardavila@gmail.com'
 class TestMisc(test.SimpleTestCase):
 
     def setUp(self):
-        self._mock_dt = datetime.datetime.fromisoformat('2020-11-10T10:00:00.000100')
+
+        self._mock_dt_iso = '2020-11-10T10:00:00.000100'
+        self._mock_dt_iso_nous = '2020-11-10T10:00:00'
+        self._mock_dt_iso_utc = self._mock_dt_iso + '+00:00'
+        self._mock_dt_iso_nous_utc = self._mock_dt_iso_nous + '+00:00'
+
+        self._mock_dt = datetime.datetime.fromisoformat(self._mock_dt_iso)
         self._log = logging.getLogger()
 
     def test_get_utc_timestamp(self):
@@ -76,3 +82,17 @@ class TestMisc(test.SimpleTestCase):
         expected = datetime.time(hour=10, minute=0, second=0, microsecond=100)
         actual = misc.get_now_hour_utc(no_microseconds=False)
         self.assertEquals(actual, expected, 'Wrong hour returned')
+
+    @mock.patch('datetime.datetime')
+    def test_get_now_utc(self, mock_dt):
+        """UNIT test: services.common.misc.get_now_utc
+        """
+        self._log.debug('>>> test_get_now_utc:')
+
+        mock_dt.utcnow.return_value = self._mock_dt
+
+        actual = misc.get_now_utc()
+        self.assertEquals(actual.isoformat(), self._mock_dt_iso_nous_utc, 'Wrong hour returned')
+
+        actual = misc.get_now_utc(no_microseconds=False)
+        self.assertEquals(actual.isoformat(), self._mock_dt_iso_utc, 'Wrong hour returned')
