@@ -7,7 +7,7 @@ import sys
 Django settings for the tledb project.
 """
 
-if '__DJ_DEVPROD' in os.environ and os.environ['__DJ_DEVPROD'] == 'dev':
+if '__DJ_ENV' in os.environ and os.environ['__DJ_ENV'] == 'dev':
     print('DEBUG activated for testing')
     ALLOWED_HOSTS = []
     DBCONFIG = '../conf/dev/db-dev.json'

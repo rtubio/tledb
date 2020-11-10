@@ -148,14 +148,3 @@ def get_utc_timestamp(utc_datetime=None):
         utc_datetime = get_now_utc()
     diff = utc_datetime - TIMESTAMP_0
     return int(diff.total_seconds() * 10**6)
-
-
-def load_json_url(url):
-    """
-    Returns the JSON object as read from a HTTP response.
-    :param url: URL to be invoked
-    :return: JSON-like object
-    """
-    response = urllib.request.urlopen(url).read()
-    response_str = str(response, 'UTF-8')
-    return json.loads(response_str)

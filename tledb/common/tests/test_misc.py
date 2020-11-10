@@ -4,6 +4,7 @@ import logging
 import pytz
 
 from django import test
+from unittest import mock
 
 from common import misc
 
@@ -28,6 +29,7 @@ __author__ = 'rtpardavila@gmail.com'
 class TestMisc(test.SimpleTestCase):
 
     def setUp(self):
+        self._mock_dt = datetime.datetime.fromisoformat('2020-11-10T10:00:00.000100')
         self._log = logging.getLogger()
 
     def test_get_utc_timestamp(self):
@@ -59,3 +61,18 @@ class TestMisc(test.SimpleTestCase):
         self.assertEquals(
             misc.get_utc_window(center=c, duration=d), (c - d, c + d)
         )
+
+    @mock.patch('datetime.datetime')
+    def test_get_now_hour_utc(self, mock_dt):
+        """UNIT test: services.common.misc.get_now_hour_utc
+        """
+        self._log.debug('>>> test_get_now_hour_utc:')
+
+        mock_dt.utcnow.return_value = self._mock_dt
+        expected = datetime.time(hour=10, minute=0, second=0, microsecond=0)
+        actual = misc.get_now_hour_utc()
+        self.assertEquals(actual, expected, 'Wrong hour returned')
+
+        expected = datetime.time(hour=10, minute=0, second=0, microsecond=100)
+        actual = misc.get_now_hour_utc(no_microseconds=False)
+        self.assertEquals(actual, expected, 'Wrong hour returned')

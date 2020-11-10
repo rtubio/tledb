@@ -38,4 +38,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        cd tledb && export __DJ_DEVPROD='dev' && coverage run --rcfile="$tledb_coverage_rc" manage.py test && coveralls
+        cd tledb && export __DJ_ENV='dev' && coverage run --rcfile="$tledb_coverage_rc" manage.py test && coveralls
