@@ -2,5 +2,5 @@
 
 source 'conf/paths.conf'
 
-echo "tledb.PKGS_PY=$REQUIREMENTS_FILE"
-echo "tledb.CONF_COVERAGE=$COVERAGE_CONF"
+echo "tledb_py_pkgs=$REQUIREMENTS_FILE"
+echo "tledb_coverage_rc=$COVERAGE_CONF"
