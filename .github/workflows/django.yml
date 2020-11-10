@@ -21,8 +21,12 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
+      run: |
+        bash 'conf/dev/gen-ghenv.sh'
+        cat '.github/.env' >> $GITHUB_ENV
     - name: Install Dependencies
       run: |
+        echo ${{ tledb.PKGS_PY }}
         python -m pip install --upgrade pip
         pip install -r conf/requirements.txt
     - name: Setup Test Environment
