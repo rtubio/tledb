@@ -23,6 +23,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Load custom environment
       run: |
+        bash 'conf/dev/gen-ghenv.sh'
         bash 'conf/dev/gen-ghenv.sh' >> $GITHUB_ENV
     - name: Install Dependencies
       run: |
