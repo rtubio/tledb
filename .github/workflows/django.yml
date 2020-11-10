@@ -28,7 +28,7 @@ jobs:
         echo "tledb_coverage_rc=$COVERAGE_CONF" >> $GITHUB_ENV
     - name: Install Dependencies
       run: |
-        echo ${{ tledb_py_pkgs }}
+        echo $tledb_py_pkgs
         python -m pip install --upgrade pip
         pip install -r conf/requirements.txt
     - name: Setup Test Environment
