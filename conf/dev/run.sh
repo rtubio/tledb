@@ -8,10 +8,10 @@ docker build \
     --build-arg "PKGS_DEB=$DOCKER_DEBPKGS"\
     --build-arg "PKGS_PY=$DOCKER_PYPKGS"\
     --build-arg "USER=$DOCKER_USER"\
-    --tag "$DEV_DOCKERNAME" .\
+    --build-arg "ENTRY_SH=$DOCKER_ENTRYSH"\
+    --build-arg "PORT=$DOCKER_PORT"\
+    --tag "$DOCKER_NAME" . \
 && echo "「イメージ」完了しました" &&\
 docker run\
-    -p $DEV_DOCKERPORT:$DEV_DOCKERPORT\
-    -v "$(pwd):$DOCKER_ROOT"\
-    -it "$DEV_DOCKERNAME"\
-    /bin/bash -c "su -l \"$DOCKER_USER\" && cd \"$DOCKER_ROOT\""
+    --publish $DOCKER_PORT:$DOCKER_PORT -v "$(pwd):$DOCKER_ROOT"\
+    --name "$DOCKER_NAME" -it "$DOCKER_NAME"

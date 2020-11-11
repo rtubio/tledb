@@ -9,6 +9,7 @@
 source 'conf/paths.conf'
 
 source "$VENV_ACTIVATE" &&\
-    pip freeze | grep -v 'pkg-resources==0.0.0' > "$REQUIREMENTS_FILE"
+    pip freeze | grep -v 'pkg-resources==0.0.0' > "$REQUIREMENTS_FILE" &&\
+    pip-compile "$REQUIREMENTS_FILE" --generate-hashes
 
 deactivate

@@ -1,23 +1,38 @@
 FROM python:3.9-buster
-ENV PYTHONUNBUFFERED 1
 
+# Environment variables, available even during run
+ENV PYTHONUNBUFFERED 1
+ENV __DJ_ENV 'dev'
+
+# These are the default values, which are overriden with the arguments from the cli invokation.
 ARG DOCKER_ROOT='/opt/tledb'
+ARG CONF_ROOT='./conf'
 ARG PKGS_DEB='debian.packages'
 ARG PKGS_PY='requirements.txt'
+ARG ENTRY_SH='entrypoint.sh'
+ARG STARTUP_SH='/usr/local/bin/entrypoint.sh'
 ARG USER='tledb'
+ARG UID=1001
+ARG GID=1001
+ARG PORT=8000
 
-# ### Link this folder to the outer folder for code edition
-# RUN mkdir -p /opt/services/tledb
-RUN mkdir -p ${DOCKER_ROOT}
+EXPOSE ${PORT}
 
-COPY ./conf ./conf
-COPY ./tledb ./tledb
+COPY ${CONF_ROOT} ${CONF_ROOT}
 
-RUN apt update
+RUN apt-get update
 RUN cat ${PKGS_DEB} | xargs apt-get install -y
-RUN pip install -r ${PKGS_PY}
+RUN rm -rf /var/lib/apt/lists/*
+RUN pip install --require-hashes --no-cache-dir -r ${PKGS_PY}
 
-RUN useradd -ms /bin/bash ${USER}
+RUN groupadd --gid ${GID} ${USER}
+RUN useradd --create-home --shell /bin/bash --uid ${UID} --gid ${GID} ${USER}
+
+RUN mkdir -p ${DOCKER_ROOT}
 RUN chown ${USER}:${USER} -R ${DOCKER_ROOT}
 
-CMD ["/bin/bash"]
+USER ${UID}:${GID}
+WORKDIR ${DOCKER_ROOT}/tledb
+
+ENTRYPOINT [ "/bin/bash" ]
+CMD ["python", "manage.py", "runserver"]
