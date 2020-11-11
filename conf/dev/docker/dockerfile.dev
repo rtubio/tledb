@@ -13,6 +13,7 @@ ARG USER='tledb'
 ARG UID=1001
 ARG GID=1001
 ARG PORT=8000
+ARG LAUNCHER_SH="/usr/local/bin/launcher.sh"
 
 EXPOSE ${PORT}
 
@@ -29,8 +30,13 @@ RUN useradd --create-home --shell /bin/bash --uid ${UID} --gid ${GID} ${USER}
 RUN mkdir -p ${DOCKER_ROOT}
 RUN chown ${USER}:${USER} -R ${DOCKER_ROOT}
 
+COPY ${CONF_ROOT}/dev/docker/launcher.sh ${LAUNCHER_SH}
+RUN chown ${USER}:${USER} ${LAUNCHER_SH}
+RUN chmod +x ${LAUNCHER_SH}
+
 USER ${UID}:${GID}
 WORKDIR ${DOCKER_ROOT}/tledb
 
 # Need to ensure that django connects to the 0.0.0.0 local interface, for proper bridging
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# CMD ["python", "manage.py", "runserver", "0.0.0.0:${PORT}}"]
+CMD ["/bin/bash", "-c", "${LAUNCHER_SH}"]
