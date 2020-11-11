@@ -9,8 +9,6 @@ ARG DOCKER_ROOT='/opt/tledb'
 ARG CONF_ROOT='./conf'
 ARG PKGS_DEB='debian.packages'
 ARG PKGS_PY='requirements.txt'
-ARG ENTRY_SH='entrypoint.sh'
-ARG STARTUP_SH='/usr/local/bin/entrypoint.sh'
 ARG USER='tledb'
 ARG UID=1001
 ARG GID=1001
@@ -34,5 +32,4 @@ RUN chown ${USER}:${USER} -R ${DOCKER_ROOT}
 USER ${UID}:${GID}
 WORKDIR ${DOCKER_ROOT}/tledb
 
-ENTRYPOINT [ "/bin/bash" ]
 CMD ["python", "manage.py", "runserver"]

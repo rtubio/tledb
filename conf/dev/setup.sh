@@ -20,9 +20,10 @@ source "$setup_os_packages"
 echo "「インフォ」Setting up local development environment..."
 
 # 0) Create required directories
-mkdir -p "$SECRETS_D"
 mkdir -p "$LOGS_D"
+mkdir -p "$SECRETS_D"
 mkdir -p "$STATIC_D"
+mkdir -p "$RUN_D"
 
 # 1) A development environment is created, although in the docker container it will not be necessary.
 [[ ! -f "$VENV_ACTIVATE" ]] && {
