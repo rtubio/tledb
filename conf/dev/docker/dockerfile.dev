@@ -32,4 +32,5 @@ RUN chown ${USER}:${USER} -R ${DOCKER_ROOT}
 USER ${UID}:${GID}
 WORKDIR ${DOCKER_ROOT}/tledb
 
-CMD ["python", "manage.py", "runserver"]
+# Need to ensure that django connects to the 0.0.0.0 local interface, for proper bridging
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
