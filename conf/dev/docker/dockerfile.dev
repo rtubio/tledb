@@ -19,8 +19,7 @@ EXPOSE ${PORT}
 COPY ${CONF_ROOT} ${CONF_ROOT}
 
 RUN apt-get update
-RUN cat ${PKGS_DEB} | xargs apt-get install -y
-RUN rm -rf /var/lib/apt/lists/*
+RUN cat ${PKGS_DEB} | xargs apt-get install -y && rm -rf /var/lib/apt/lists/*
 RUN pip install --require-hashes --no-cache-dir -r ${PKGS_PY}
 
 RUN groupadd --gid ${GID} ${USER}
