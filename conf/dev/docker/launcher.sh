@@ -1,0 +1,6 @@
+#!/bin/bash
+
+python manage.py migrate
+python manage.py collectstatic --no-input
+
+/usr/bin/supervisord -c /etc/supervisor/supervisord.conf
