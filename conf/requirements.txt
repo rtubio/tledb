@@ -6,7 +6,7 @@ chardet==3.0.4
 confusable-homoglyphs==3.2.0
 coveralls
 defusedxml==0.5.0
-Django==2.2.13
+Django==2.2.18
 django-allauth==0.38.0
 django-bootstrap-form==3.4
 django-bootstrap3==11.0.0
